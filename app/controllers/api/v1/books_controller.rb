@@ -2,46 +2,43 @@ module Api
   module V1
     class BooksController < ApplicationController
       before_action :set_book, only: %i[show edit update destroy]
-      before_action :authenticate_user!
+      before_action :doorkeeper_authorize!   
 
       def index
         @books = Book.all
+        render json: { books: @books }, status: 200
       end
 
-      def show; end
-
-      def new
-        @book = Book.new
+      def show
+        render json: { book: @book }, status: 200
       end
+
+      def new; end
 
       def edit; end
 
       def create
         @book = Book.new(book_params)
-
-        respond_to do |format|
-          if @book.save
-            format.json { render :show, status: :created, location: @book }
-          else
-            format.json { render json: @book.errors, status: :unprocessable_entity }
-          end
+        if @book.save
+          render json: @book, status: 201
+        else
+          render json: { message: 'Bad request' }, status: 400
         end
       end
 
-      def update
-        respond_to do |format|
-          if @book.update(book_params)
-            format.json { render :show, status: :ok, location: @book }
-          else
-            format.json { render json: @book.errors, status: :unprocessable_entity }
-          end
+      def update        
+        if @book.update(book_params)
+          render json: { book: @book }, status: 204
+        else
+          render json: { message: 'Bad request' }, status: 400
         end
       end
 
       def destroy
-        @book.destroy
-        respond_to do |format|
-          format.json { head :no_content }
+        if @book.destroy        
+          render json: { message: 'Book successfully deleted' }, status: 204
+        else
+          render json: { message: 'Bad request' }, status: 400
         end
       end
 

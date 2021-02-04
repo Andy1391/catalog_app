@@ -6,9 +6,9 @@ Doorkeeper.configure do
   orm :active_record
 
   # This block will be called to check whether the resource owner is authenticated or not.
-  resource_owner_authenticator do    
-    current_user || warden.authenticate!(scope: :user)
-  end
+  # resource_owner_authenticator do    
+  #   current_user || warden.authenticate!(scope: :user)
+  # end
 
   # If you didn't skip applications controller from Doorkeeper routes in your application routes.rb
   # file then you need to declare this block in order to restrict access to the web interface for
@@ -16,8 +16,11 @@ Doorkeeper.configure do
   # every time somebody will try to access the admin web interface.
   #
   admin_authenticator do
-    current_user.try(:admin) || redirect_to(new_user_session_path)
-    # true
+    current_user.try(:admin) || User.new
+  end
+
+  resource_owner_from_credentials do |_routes|
+    User.authenticate(params[:email], params[:password])
   end
  
 
@@ -281,7 +284,7 @@ Doorkeeper.configure do
   #
   # You can completely disable this feature with:
   #
-  # allow_blank_redirect_uri false
+  allow_blank_redirect_uri true
   #
   # Or you can define your custom check:
   #
@@ -336,7 +339,7 @@ Doorkeeper.configure do
   #   http://tools.ietf.org/html/rfc6819#section-4.4.2
   #   http://tools.ietf.org/html/rfc6819#section-4.4.3
   #
-  # grant_flows %w[authorization_code client_credentials]
+  grant_flows %w[password]
 
   # Allows to customize OAuth grant flows that +each+ application support.
   # You can configure a custom block (or use a class respond to `#call`) that must
@@ -416,10 +419,10 @@ Doorkeeper.configure do
   # Under some circumstances you might want to have applications auto-approved,
   # so that the user skips the authorization step.
   # For example if dealing with a trusted application.
-  #
-  # skip_authorization do |resource_owner, client|
-  #   client.superapp? or resource_owner.admin?
-  # end
+  
+  skip_authorization do 
+    true
+  end
 
   # Configure custom constraints for the Token Introspection request.
   # By default this configuration option allows to introspect a token by another

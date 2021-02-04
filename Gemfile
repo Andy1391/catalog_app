@@ -16,6 +16,7 @@ gem 'devise'
 gem 'doorkeeper'
 gem 'rubocop'
 gem 'rubocop-rails'
+gem 'rabl'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
