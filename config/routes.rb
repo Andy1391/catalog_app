@@ -8,9 +8,13 @@ Rails.application.routes.draw do
     namespace :v1 do
       get 'catalog/index'
       post 'users/sign_in'
-      get '/users/me'      
+      post 'users/sign_up'
+      post 'users/log_out'
+      get 'users/me'      
       resources :users
       resources :books
+      resources :authors
+      resources :categories
     end
   end  
 end

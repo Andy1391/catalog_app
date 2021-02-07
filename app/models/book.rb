@@ -1,4 +1,6 @@
 class Book < ApplicationRecord
-  validates :title, :author, :category, :price, presence: true
+  belongs_to :author
+  has_one :categories
+  validates :title, :price, presence: true
   validates :price, numericality: { greater_than_or_equal_to: 0.01 }
 end
