@@ -1,6 +1,8 @@
 module Api
   module V1
     class UsersController < ApplicationController
+      load_and_authorize_resource
+      before_action :set_user, only: %i[show update]
       respond_to :json
 
       def index
@@ -8,17 +10,9 @@ module Api
         render json: { users: @users }, status: 200
       end
 
-      def show; end
+      def show; end      
 
-      def new; end
-
-      def edit; end
-
-      def create; end
-
-      def update; end
-
-      def destroy; end
+      def update; end      
 
       def me
         respond_with current_resource_owner
@@ -89,6 +83,10 @@ module Api
       end
 
       private
+
+      def set_user
+        @user = User.find(params[:id]) 
+      end
 
       def current_resource_owner
         User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token

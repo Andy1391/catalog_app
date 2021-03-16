@@ -7,8 +7,17 @@ require("@rails/ujs").start()
 require("turbolinks").start()
 require("@rails/activestorage").start()
 require("channels")
+require('admin-lte');
+require('chart.js');
 
+import 'bootstrap';
+import "admin-lte/dist/css/AdminLTE.css";
+import "admin-lte/dist/css/skins/_all-skins.css";
+import "font-awesome/css/font-awesome.css";
 
+document.addEventListener("turbolinks:load", () => {
+  $('[data-toggle="tooltip"]').tooltip()
+});
 // Uncomment to copy all static images under ../images to the output folder and reference
 // them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
 // or the `imagePath` JavaScript helper below.

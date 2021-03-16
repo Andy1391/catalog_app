@@ -1,0 +1,47 @@
+<h1>Dashboard3</h1>
+<%= params.inspect %>
+ 
+  <%= form_tag(admin_dashboards_index3_path, method: :get) do %>
+    <p><%= select_tag :month, options_for_select([ 1, 10 ,11 ], 2) %></p> 
+    <%= submit_tag "Send" %>
+  <% end %>
+  
+  
+  aaas <%= @month %>
+
+
+<canvas id="myChart" width="auto" height="auto"></canvas>
+<script>
+
+  render_chart();
+
+  $('select').on('change', function() {  
+    render_chart();
+  });  
+
+  function render_chart(value) {
+    
+  fetch('index3_data')
+  .then((response) => {
+    return response.json();
+  })
+  .then((response) => {
+    var data = response;    
+
+var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: data['month'],
+          datasets: [{
+              label: 'Quantity sales',
+              data: data['data'],              
+              borderWidth: 3
+          }]
+      }});
+
+  });
+
+  }
+  
+</script>

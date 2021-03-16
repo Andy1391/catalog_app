@@ -1,0 +1,20 @@
+<%= form_tag api_v1_charges_path do %>
+  <article>
+    <% if flash[:error].present? %>
+      <div id="error_explanation">
+        <p><%= flash[:error] %></p>
+      </div>
+    <% end %>
+    <label class="total_price">
+    <% @order_items.each do |order_item| %>
+      <p>Book_id: <%= order_item.book_id %></p>
+      <p>quantity: <%= order_item.quantity %></p>
+    <%end%>
+     <p>Total price: <%= @total_price %>$</p>
+    </label>
+  </article>
+
+  <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+    data-key="<%= Rails.configuration.stripe[:publishable_key] %>"    
+    data-locale="auto"></script>
+  <% end %>

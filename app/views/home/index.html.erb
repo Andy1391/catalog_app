@@ -1,0 +1,19 @@
+<%= flash[:error] %>
+<%= paginate @books %>
+<div class="search_form_for_book_title">
+  <%= search_form_for @q,  url: root_path do |f| %>
+    <%= f.label :Search_book %>
+    <%= f.search_field :title_cont %>
+    <%= f.submit %>
+  <% end %>
+</div>
+
+<div class="books">
+  <%- @books.each do |book| %>
+  <div class="book">
+    <p>Title: <%= book.title %></p>
+    <p>Author: <%= book.author.first_name + ' ' + book.author.last_name %></p>
+    <p>Price: <%= book.price %></p>
+  <div class="book">  
+  <%end%>
+</div>

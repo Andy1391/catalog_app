@@ -1,0 +1,18 @@
+<h1>Sales</h1>
+<%= paginate @sales %>
+
+<div class="search_form_for_sales">
+  <%= search_form_for @q,  url: api_v1_sales_index_path do |f| %>
+    <%= f.label :Search_sales %>
+    <%= f.search_field :book_id_eq %>
+    <%= f.submit %>
+  <% end %>
+</div>
+
+<% @sales.each do |sale| %>
+  <div class="sale">
+    <p>book_id: <%= sale.book_id %></p>
+    <p>quantity: <%= sale.quantity %></p>
+    <p>order_id: <%= sale.order_id %></p>    
+  </div>
+<% end %>
