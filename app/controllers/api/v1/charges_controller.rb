@@ -2,39 +2,52 @@ module Api
   module V1
     class ChargesController < ApplicationController
       rescue_from Stripe::CardError, with: :catch_exception
-      
+
       def new
         @order = Order.find(params[:order_id])
         @amount = @order.total_price
+        session[:amount] = @amount
+        session[:order] = @order
         @order_items = @order.order_items
       end
 
       def create
-        @amount = 123
-
-        customer = Stripe::Customer.create({
-          email: params[:stripeEmail],
-          source: params[:stripeToken],
-        })
+        @amount = session[:amount].to_f
+        order = session[:order]
+        id = order['id']
+        @order = Order.find(id)
+        price_to_cent
+        price_to_integer
 
         charge = Stripe::Charge.create({
-          customer: customer.id,
-          amount: @amount,
-          description: 'Rails Stripe customer',
-          currency: 'usd',
-        })
+          source:  params[:stripeToken],
+          amount:  @amount,
+          description:  'Rails Stripe customer',
+          currency: 'usd'
+        })      
 
-        if charge
-          render json: { message: 'Thank you for your purchase' }, status: 201
-        else
-          render json: { message: 'Bad request' }, status: 400
-        end
+        @order.update(status: :confirmed)
+
+        session.delete(:amount)
+        session.delete(:order)
+
+        rescue Stripe::CardError => e
+          flash[:error] = e.message
+          redirect_to new_api_v1_charge_path
       end
 
       private
 
       def charges_params
-        params.permit(:stripeEmail, :stripeToken, :order_id)
+        params.permit(:stripeToken, :order_id)
+      end
+
+      def price_to_cent
+        @amount *= 100
+      end
+
+      def price_to_integer
+        @amount = @amount.to_i
       end
 
       def catch_exception(exception)

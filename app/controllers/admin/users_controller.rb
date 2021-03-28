@@ -2,7 +2,7 @@ module Api
   module V1
     class Admin::UsersController < AdminController
       load_and_authorize_resource
-      before_action :set_user, only: %i[show update destroy]      
+      before_action :set_user, only: %i[show update destroy]
 
       def index
         @users = User.all
@@ -34,17 +34,16 @@ module Api
         else
           render json: { message: 'Bad request' }, status: 400
         end
-      end
-   
+      end   
 
       private
 
       def set_user
-        @user = User.find(params[:id]) 
+        @user = User.find(params[:id])
       end
 
-      def user_params        
-        params.require(:user).permit(:name, :email, :role, :password, :password_confirmation)      
+      def user_params
+        params.require(:user).permit(:name, :email, :role, :password, :password_confirmation)
       end
     end
   end

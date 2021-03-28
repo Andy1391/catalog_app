@@ -2,41 +2,35 @@ module Api
   module V1
     class Admin::OrdersController < AdminController
       load_and_authorize_resource
-      before_action :set_order, only: %i[show update destroy check_book_quantity]     
+      before_action :set_order, only: %i[show update destroy check_book_quantity]
 
       def index
-        @orders = Order.all       
+        @orders = Order.all
       end
 
-      def show        
+      def show
         @books_order = @order.books
       end
 
-      def create       
+      def create
         if params[:book_id]
           @order = Order.new
           check_book_quantity
           @order.total_price = @order.total_price          
-          @order.save          
-        elsif 
-          @order = Order.new(order_params)
-          @order.total_price = total_price
-          @order.save
         else
-          render json: { error: @order.errors.full_messages }, status: 400
+          @order = Order.new(order_params)
+          @order.total_price = total_price          
         end
+        @order.save
       end
 
       def update
         if params[:book_id]
-          check_book_quantity
-          render 'show.rabl'            
-        elsif 
-          @order.update(order_params)
-          render 'show.rabl'
+          check_book_quantity          
         else
-          render json: { message: 'Bad request' }, status: 400
-        end          
+          @order.update(order_params)          
+        end
+        render 'show.rabl'
       end
 
       def destroy
@@ -45,7 +39,7 @@ module Api
         else
           render json: { error: @order.errors.full_messages }, status: 400
         end
-      end  
+      end
 
       private
 
@@ -53,14 +47,14 @@ module Api
         @book = Book.find(params[:book_id])
         @order_books = @order.order_items
         @book_in_order = @order_books.to_a.to_s.include?("#{params[:book_id]}")
-        if @book_in_order        
+        if @book_in_order
           @order_item = OrderItem.where(book_id: params[:book_id], order_id: @order).first
           @order_item.quantity += 1
           @order_item.save
         else
           @books_order = @order.books
-          @books_order << @book  
-        end      
+          @books_order << @book
+        end
       end
 
       def set_order
@@ -68,7 +62,7 @@ module Api
       end
 
       def order_params
-        params.require(:order).permit(:name, :phone, :adress, :email, :total_price, :status)        
+        params.require(:order).permit(:name, :phone, :adress, :email, :total_price, :status)
       end
     end
   end

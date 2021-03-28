@@ -4,7 +4,7 @@ module Api
       load_and_authorize_resource
 
       before_action :set_book, only: %i[show edit update destroy]
-      # before_action :doorkeeper_authorize!
+      before_action :doorkeeper_authorize!
 
       def index
         @books = Book.all
@@ -13,9 +13,9 @@ module Api
       def show; end
 
       def create
-        @book = Book.new(book_params)        
+        @book = Book.new(book_params)
         @book.category_id = params[:category_id]
-        @book.author = Author.find(params[:author_id])     
+        @book.author = Author.find(params[:author_id])
 
         if @book.save
           render json: @book, status: 201

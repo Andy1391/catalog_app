@@ -8,14 +8,14 @@ module Api
         @admin_users = AdminUser.all
       end
 
-      def show; end      
+      def show; end
 
       def create
         @admin_user = AdminUser.new(admin_user_params)
         if @admin_user.save
-          render 'show.rabl', status: 201    
+          render 'show.rabl', status: 201
         else
-          render json: { error: @admin_user.errors.full_messages }, status: 400 
+          render json: { error: @admin_user.errors.full_messages }, status: 400
         end
       end
 
@@ -24,7 +24,7 @@ module Api
           render 'show.rabl', status: 201
         else
           render json: { error: @admin_user.errors.full_messages }, status: 400
-        end        
+        end
       end
 
       def destroy
@@ -32,17 +32,17 @@ module Api
           render json: { message: 'Admin successfully deleted' }, status: 204
         else
           render json: { error: @admin_user.errors.full_messages }, status: 400
-        end  
+        end
       end
 
       private
 
       def set_admin_user
-        @admin_user = AdminUser.find(params[:id])  
+        @admin_user = AdminUser.find(params[:id])
       end
 
       def admin_user_params
-        params.require(:admin_user).permit(:name, :email, :password, :password_confirmation) 
+        params.require(:admin_user).permit(:name, :email, :password, :password_confirmation)
       end
     end
   end

@@ -3,7 +3,7 @@ module Api
     class AuthorsController < ApplicationController
       load_and_authorize_resource
       before_action :set_author, only: %i[update destroy]
-      
+
       def index
         @authors = Author.all
         render json: { authors: @authors }, status: 200
@@ -18,12 +18,12 @@ module Api
         end
       end
 
-      def update        
+      def update
         if @author.update(author_params)
           render 'show.rabl', status: 201
         else
           render json: { error: @author.errors.full_messages }, status: 400
-        end       
+        end
       end
 
       def destroy
@@ -31,7 +31,7 @@ module Api
           render json: { message: 'Author successfully deleted' }, status: 204
         else
           render json: { error: @author.errors.full_messages }, status: 400
-        end         
+        end
       end
 
       private

@@ -10,11 +10,12 @@
       <p>Book_id: <%= order_item.book_id %></p>
       <p>quantity: <%= order_item.quantity %></p>
     <%end%>
-     <p>Total price: <%= @total_price %>$</p>
+     <p>Total price: <%= @amount %>$</p>
     </label>
   </article>
 
   <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-    data-key="<%= Rails.configuration.stripe[:publishable_key] %>"    
+    data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+    data-amount="<%= @amount %>"
     data-locale="auto"></script>
   <% end %>
