@@ -24,9 +24,11 @@ module Api
           amount:  @amount,
           description:  'Rails Stripe customer',
           currency: 'usd'
-        })      
+        })
 
-        @order.update(status: :confirmed)
+        unless charge.nil?
+          @order.update(status: :confirmed)
+        end
 
         session.delete(:amount)
         session.delete(:order)
@@ -53,6 +55,6 @@ module Api
       def catch_exception(exception)
         flash[:error] = exception.message
       end
-    end    
+    end
   end
 end
